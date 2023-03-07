@@ -1,31 +1,30 @@
 
 module RemoteUsers
-  class List < ActiveInteraction::Base
+  class Fetch < ActiveInteraction::Base
     string :remote_url, default: "https://dummyjson.com/users"
+    integer :limit, default: 0
+    integer :skip, default: 0
 
-    def self.call
-      obj = new
-      obj.call
-    end
-
-    def call
-      return transform_keys(response) if success?
+    def execute
+      { users: users, total: total } if valid?
       # Add rescue errors and timeouts
     end
 
-
-
     private
 
-    def success?
-      response.status == 200
-    end
-
     def response
-      @response ||= Faraday.get(remote_url)
+      @response ||= Faraday.get(request_params)
     end
 
-    def transform_keys(response)
+    def request_params
+      "#{remote_url}?limit=#{limit}&&skip#{skip}"
+    end
+
+    def total
+      JSON.parse(response.body).dig("total")
+    end
+
+    def users
       JSON.parse(response.body).dig('users').map { |user_data| user_data.deep_transform_keys! { |key| key.to_s.underscore }.deep_symbolize_keys! }
     end
   end

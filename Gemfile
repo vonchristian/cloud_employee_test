@@ -67,3 +67,4 @@ end
 gem 'faraday'
 gem 'pry-rails'
 gem 'active_interaction', '~> 5.2'
+gem 'sidekiq'
