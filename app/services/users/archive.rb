@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 module Users
-  class Delete < ActiveInteraction::Base
+  class Archive < ActiveInteraction::Base
     object :user
 
     def execute
       update_deleted_at
-      send_account_deletion_email
+      send_archive_email
 
       user
     end
@@ -17,8 +17,8 @@ module Users
       user.update!(deleted_at: Time.zone.now)
     end
 
-    def send_account_deletion_email
-      Users::AccountDeletionEmailJob.perform_in(30.minutes.from_now, user.id)
+    def send_archive_email
+      Users::ArchiveJob.perform_in(30.minutes.from_now, user.id)
     end
   end
 end

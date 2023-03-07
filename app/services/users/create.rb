@@ -2,6 +2,8 @@ require 'active_interaction'
 
 module Users
   class Create < ActiveInteraction::Base
+    # Add validations
+
     array :users_data do
       hash do
         integer :id
@@ -69,8 +71,7 @@ module Users
     end
 
     def execute
-      # Add validations
-      User.upsert_all!(users_data)
+      User.upsert_all(users_data)
     end
   end
 end

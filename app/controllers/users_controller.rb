@@ -6,7 +6,7 @@ class UsersController < ApplicationController
 
   def destroy
     user = User.find(params[:id])
-    Users::Delete.run(user: user)
+    Users::Archive.run(user: user)
 
     respond_to do |format|
       format.html { redirect_to users_path }
